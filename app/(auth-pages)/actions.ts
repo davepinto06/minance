@@ -4,7 +4,6 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { createClient } from '@/utils/supabase/server';
-import { headers } from 'next/headers';
 import { encodedRedirect } from '@/utils/utils';
 import {
   forgotPasswordSchema,
@@ -12,6 +11,8 @@ import {
   resetPasswordSchema,
   signupSchema,
 } from './schemas';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL!;
 
 export const login = async (formData: FormData) => {
   const supabase = await createClient();
@@ -41,8 +42,7 @@ export const login = async (formData: FormData) => {
 
 export const signup = async (formData: FormData) => {
   const supabase = await createClient();
-  const origin = (await headers()).get('origin');
-  const emailRedirectTo = `${origin}/`;
+  const emailRedirectTo = `${SITE_URL}/`;
 
   const raw = {
     fName: formData.get('fName'),
@@ -84,8 +84,7 @@ export const signup = async (formData: FormData) => {
 export const forgotPassword = async (formData: FormData) => {
   const rawEmail = formData.get('email');
   const supabase = await createClient();
-  const origin = (await headers()).get('origin');
-  const redirectTo = `${origin}/reset-password`;
+  const redirectTo = `${SITE_URL}/reset-password`;
 
   const result = forgotPasswordSchema.safeParse({ email: rawEmail });
   if (!result.success) {
@@ -98,6 +97,8 @@ export const forgotPassword = async (formData: FormData) => {
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: redirectTo,
   });
+
+  console.log(SITE_URL, redirectTo);
 
   if (error) {
     console.error(error.message);

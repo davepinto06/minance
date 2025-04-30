@@ -9,11 +9,12 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const token = requestUrl.searchParams.get('token_hash');
   const type = requestUrl.searchParams.get('type');
-  const origin = requestUrl.origin;
-  const redirectTo = requestUrl.searchParams.get('redirect_to')?.toString();
+  const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL!;
+  const redirectTo =
+    requestUrl.searchParams.get('redirect_to')?.toString() ?? '/';
 
   if (!token) {
-    return NextResponse.redirect(`${origin}/sign-in`);
+    return NextResponse.redirect(`${SITE_URL}/sign-in`);
   }
 
   if (type === 'signup') {
@@ -23,9 +24,9 @@ export async function GET(request: Request) {
       type: 'signup' as EmailOtpType,
     });
     if (error || !data.session) {
-      return NextResponse.redirect(`${origin}/sign-in`);
+      return NextResponse.redirect(`${SITE_URL}/sign-in`);
     }
-    return NextResponse.redirect(redirectTo || `${origin}/`);
+    return NextResponse.redirect(redirectTo || `${SITE_URL}/`);
   }
 
   if (type === 'recovery') {
@@ -35,8 +36,8 @@ export async function GET(request: Request) {
       type: 'recovery' as EmailOtpType,
     });
     if (error || !data.session) {
-      return NextResponse.redirect(`${origin}/forgot-password`);
+      return NextResponse.redirect(`${SITE_URL}/forgot-password`);
     }
-    return NextResponse.redirect(redirectTo || `${origin}/`);
+    return NextResponse.redirect(redirectTo || `${SITE_URL}/`);
   }
 }
