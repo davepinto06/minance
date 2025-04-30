@@ -13,7 +13,7 @@ export default async function Home() {
     <>
       <h1>
         You have been redirected to the new page!! <br /> Hello{' '}
-        {data.user.email}!
+        {data.user.user_metadata.display_name}!
         <form action={signOut}>
           <button
             type="submit"

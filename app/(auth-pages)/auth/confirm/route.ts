@@ -1,4 +1,5 @@
 import { createClient } from '@/utils/supabase/server';
+import { EmailOtpType } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
@@ -6,19 +7,36 @@ export async function GET(request: Request) {
   // by the SSR package. It exchanges an auth code for the user's session.
   // https://supabase.com/docs/guides/auth/server-side/nextjs
   const requestUrl = new URL(request.url);
-  const code = requestUrl.searchParams.get('code');
+  const token = requestUrl.searchParams.get('token_hash');
+  const type = requestUrl.searchParams.get('type');
   const origin = requestUrl.origin;
   const redirectTo = requestUrl.searchParams.get('redirect_to')?.toString();
 
-  if (code) {
+  if (!token) {
+    return NextResponse.redirect(`${origin}/sign-in`);
+  }
+
+  if (type === 'signup') {
     const supabase = await createClient();
-    await supabase.auth.exchangeCodeForSession(code);
+    const { data, error } = await supabase.auth.verifyOtp({
+      token_hash: token,
+      type: 'signup' as EmailOtpType,
+    });
+    if (error || !data.session) {
+      return NextResponse.redirect(`${origin}/sign-in`);
+    }
+    return NextResponse.redirect(redirectTo || `${origin}/`);
   }
 
-  if (redirectTo) {
-    return NextResponse.redirect(`${origin}${redirectTo}`);
+  if (type === 'recovery') {
+    const supabase = await createClient();
+    const { data, error } = await supabase.auth.verifyOtp({
+      token_hash: token,
+      type: 'recovery' as EmailOtpType,
+    });
+    if (error || !data.session) {
+      return NextResponse.redirect(`${origin}/forgot-password`);
+    }
+    return NextResponse.redirect(redirectTo || `${origin}/`);
   }
-
-  // URL to redirect to after sign up process completes
-  return NextResponse.redirect(`${origin}/`);
 }

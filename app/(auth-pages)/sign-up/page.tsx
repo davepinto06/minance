@@ -18,16 +18,32 @@ export default async function LoginPage(props: {
       </div>
       <div className="w-full">
         <form action={signup} className="flex flex-col space-y-4">
-          <label className="text-sm" htmlFor="name">
-            Name
-          </label>
-          <input
-            type="text"
-            name="name"
-            placeholder="John Doe"
-            className="focus:ring-main-blue w-full rounded-md border border-gray-300 p-2 focus:ring-2 focus:outline-none"
-            required
-          />
+          <div className="flex items-center justify-between gap-2">
+            <div className="w-1/2">
+              <label className="text-sm" htmlFor="fName">
+                First name
+              </label>
+              <input
+                type="text"
+                name="fName"
+                placeholder="John"
+                className="focus:ring-main-blue w-full rounded-md border border-gray-300 p-2 focus:ring-2 focus:outline-none"
+                required
+              />
+            </div>
+            <div className="w-1/2">
+              <label className="text-sm" htmlFor="lName">
+                Last Name
+              </label>
+              <input
+                type="text"
+                name="lName"
+                placeholder="Doe"
+                className="focus:ring-main-blue w-full rounded-md border border-gray-300 p-2 focus:ring-2 focus:outline-none"
+                required
+              />
+            </div>
+          </div>
           <label className="text-sm" htmlFor="email">
             Email
           </label>
@@ -38,16 +54,32 @@ export default async function LoginPage(props: {
             className="focus:ring-main-blue w-full rounded-md border border-gray-300 p-2 focus:ring-2 focus:outline-none"
             required
           />
-          <label className="text-sm" htmlFor="password">
-            Password
-          </label>
-          <input
-            type="password"
-            name="password"
-            placeholder="••••••••"
-            className="focus:ring-main-blue w-full rounded-md border border-gray-300 p-2 focus:ring-2 focus:outline-none"
-            required
-          />
+          <div className="flex items-center justify-between gap-2">
+            <div className="w-1/2">
+              <label className="text-sm" htmlFor="password">
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                placeholder="••••••••"
+                className="focus:ring-main-blue w-full rounded-md border border-gray-300 p-2 focus:ring-2 focus:outline-none"
+                required
+              />
+            </div>
+            <div className="w-1/2">
+              <label className="text-sm" htmlFor="password">
+                Confirm password
+              </label>
+              <input
+                type="password"
+                name="confirmPassword"
+                placeholder="••••••••"
+                className="focus:ring-main-blue w-full rounded-md border border-gray-300 p-2 focus:ring-2 focus:outline-none"
+                required
+              />
+            </div>
+          </div>
           <p className="text-xs text-gray-500">
             Password must be at least 8 characters long
           </p>
